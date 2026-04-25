@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user in the system (Phlebotomist or Admin)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["phlebotomist", "admin"] },
+        "createdAt": { "type": "integer" }
+      },
+      "required": ["uid", "email", "name", "role", "createdAt"]
+    },
+    "Test": {
+      "title": "Test",
+      "description": "A lab test with pricing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "testName": { "type": "string" },
+        "price": { "type": "number" },
+        "createdAt": { "type": "integer" }
+      },
+      "required": ["id", "testName", "price", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "An order for a lab test",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "phlebotomistId": { "type": "string" },
+        "patientName": { "type": "string" },
+        "patientAge": { "type": "integer" },
+        "patientPhone": { "type": "string" },
+        "referringDoctor": { "type": "string" },
+        "patientAddress": { "type": "string" },
+        "tests": { 
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "testId": { "type": "string" },
+              "testName": { "type": "string" },
+              "price": { "type": "number" }
+            }
+          }
+        },
+        "totalCost": { "type": "number" },
+        "baseCharge": { "type": "number" },
+        "commission": { "type": "number" },
+        "status": { "type": "string", "enum": ["Pending", "Collected", "Completed"] },
+        "createdAt": { "type": "integer" },
+        "updatedAt": { "type": "integer" }
+      },
+      "required": ["id", "phlebotomistId", "patientName", "patientAge", "patientPhone", "patientAddress", "tests", "totalCost", "baseCharge", "commission", "status", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "tests/{testId}": {
+      "schema": { "$ref": "#/entities/Test" },
+      "description": "Master price list of tests"
+    },
+    "orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Orders assigned to phlebotomists"
+    }
+  }
+}
